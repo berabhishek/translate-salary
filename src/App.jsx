@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import SearchableSelect from './components/SearchableSelect.jsx'
 import { countries, flagEmojiFromCountryCode, uniqueCurrencies } from './countries.js'
 
@@ -22,6 +22,7 @@ export default function App() {
   const [target, setTarget] = useState(() => countries.find(c => c.code === 'IN') || countries[1])
   const [salary, setSalary] = useState('')
   const [salaryCurrency, setSalaryCurrency] = useState(() => source?.currency)
+  const salaryInputRef = useRef(null)
 
   // When source changes, if currency matches prior source currency (user did not override), update.
   function handleSourceChange(next) {
@@ -33,6 +34,48 @@ export default function App() {
   }
 
   const currencyOptions = useMemo(() => uniqueCurrencies().map(c => ({ code: c.code })), [])
+
+  function formatSalaryWithCommas(raw) {
+    if (!raw) return ''
+    let clean = String(raw).replace(/[^0-9.]/g, '')
+    const firstDot = clean.indexOf('.')
+    if (firstDot !== -1) {
+      clean = clean.slice(0, firstDot + 1) + clean.slice(firstDot + 1).replace(/\./g, '')
+    }
+    let [intPart = '', decPart] = clean.split('.')
+    if (intPart) intPart = intPart.replace(/^0+(?=\d)/, '')
+    const formattedInt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    if (decPart !== undefined) {
+      // Preserve trailing dot while typing
+      const keepDot = clean.endsWith('.') && (decPart?.length ?? 0) === 0
+      return `${formattedInt}${keepDot ? '.' : decPart.length ? '.' : ''}${decPart ?? ''}`
+    }
+    return formattedInt
+  }
+
+  function handleSalaryChange(e) {
+    const input = e.target
+    const raw = input.value
+    // Count allowed characters (digits or dot) before caret, ignoring commas/invalids
+    const caretAllowedCount = raw.slice(0, input.selectionStart ?? raw.length).replace(/[^0-9.]/g, '').length
+
+    const formatted = formatSalaryWithCommas(raw)
+    setSalary(formatted)
+
+    // Map caret to new position in formatted string by counting allowed chars
+    let newCaret = 0
+    let seen = 0
+    for (let i = 0; i < formatted.length; i++) {
+      if (/[0-9.]/.test(formatted[i])) seen++
+      if (seen >= caretAllowedCount) { newCaret = i + 1; break }
+    }
+    if (caretAllowedCount === 0) newCaret = 0
+    else if (seen < caretAllowedCount) newCaret = formatted.length
+
+    requestAnimationFrame(() => {
+      try { salaryInputRef.current?.setSelectionRange(newCaret, newCaret) } catch {}
+    })
+  }
 
   return (
     <div className="page">
@@ -65,17 +108,16 @@ export default function App() {
           </div>
 
           <div className="form-row">
-            <label className="label">Salary</label>
+            <label className="label">Annual Salary</label>
             <div className="salary-group">
               <input
-                type="number"
+                ref={salaryInputRef}
+                type="text"
                 inputMode="decimal"
-                step="0.01"
-                min="0"
-                placeholder="e.g., 80000"
+                placeholder="e.g., 80,000"
                 className="input flex-1"
                 value={salary}
-                onChange={(e) => setSalary(e.target.value)}
+                onChange={handleSalaryChange}
               />
 
               <SearchableSelect
@@ -132,4 +174,3 @@ export default function App() {
     </div>
   )
 }
-
