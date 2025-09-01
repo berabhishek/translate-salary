@@ -1,10 +1,12 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import SearchableSelect from '../components/SearchableSelect.jsx'
-import ExpensesSection from '../components/ExpensesSection.jsx'
-import { countries, flagEmojiFromCountryCode, uniqueCurrencies } from '../countries.js'
-import { setField, resetLifestyle, setCurrencyUserSelected, setCurrencyFromSource, resetCurrencySelection } from '../store/formSlice.js'
-import { reformatWithCommasPreserveCaret } from '../utils/numberFormat.js'
+import CountrySelect from '../components/CountrySelect.jsx';
+import ExpensesSection from '../components/ExpensesSection.jsx';
+import { countries, uniqueCurrencies } from '../countries.js';
+import { setField, resetExpenses, setCurrencyUserSelected, setCurrencyFromSource, resetCurrencySelection } from '../store/formSlice.js';
+import { reformatWithCommasPreserveCaret } from '../utils/numberFormat.js';
+import { useMonetaryInput } from '../hooks/useMonetaryInput.js';
+import SearchableSelect from '../components/SearchableSelect.jsx';
 
 function currencyLabel(code) {
   const labels = {
@@ -27,41 +29,23 @@ export default function TranslateSalary() {
     targetCode,
     salary,
     salaryCurrency,
-    houseRent,
-    food,
-    entertainment,
-    travel,
-    shopping,
-    other,
-    medicalExpenses,
-    medicalInsurance,
-    surprisesOther,
+    lifestyle,
+    surprises,
   } = useSelector((s) => s.form)
 
-  const source = useMemo(() => countries.find((c) => c.code === sourceCode) || countries[0], [sourceCode])
-  const target = useMemo(() => countries.find((c) => c.code === targetCode) || countries[1], [targetCode])
+  const source = countries.find((c) => c.code === sourceCode) || countries[0]
+  const target = countries.find((c) => c.code === targetCode) || countries[1]
   const currencyOptions = useMemo(() => uniqueCurrencies().map((c) => ({ code: c.code })), [])
 
   const salaryInputRef = useRef(null)
   const [lifestyleOpen, setLifestyleOpen] = useState(false)
   const [surprisesOpen, setSurprisesOpen] = useState(false)
 
+  const makeMonetaryChangeHandler = useMonetaryInput()
+
   function handleSourceChange(next) {
-    const prevSource = source
     dispatch(setField({ field: 'sourceCode', value: next.code }))
     dispatch(setCurrencyFromSource(next.currency))
-  }
-
-  function makeMonetaryChangeHandler(field, ref) {
-    return (e) => {
-      const input = e.target
-      const raw = input.value
-      const { formatted, caret } = reformatWithCommasPreserveCaret(raw, input.selectionStart)
-      dispatch(setField({ field, value: formatted }))
-      requestAnimationFrame(() => {
-        try { ref.current?.setSelectionRange(caret, caret) } catch {}
-      })
-    }
   }
 
   return (
@@ -70,37 +54,19 @@ export default function TranslateSalary() {
         <div class="form-row-split">
           <div className="form-row">
             <label className="label">Source Country</label>
-            <SearchableSelect
-              options={countries}
+            <CountrySelect
               value={source}
               onChange={handleSourceChange}
-              getOptionValue={(o) => o.code}
-              getOptionLabel={(o) => `${o.name}`}
               placeholder="Select source country"
-              renderOption={(o) => (
-                <div className="opt-row">
-                  <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
-                  <span>{o.name}</span>
-                </div>
-              )}
             />
           </div>
 
           <div className="form-row">
             <label className="label">Target Country</label>
-            <SearchableSelect
-              options={countries}
+            <CountrySelect
               value={target}
               onChange={(o) => dispatch(setField({ field: 'targetCode', value: o.code }))}
-              getOptionValue={(o) => o.code}
-              getOptionLabel={(o) => `${o.name}`}
               placeholder="Select target country"
-              renderOption={(o) => (
-                <div className="opt-row">
-                  <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
-                  <span>{o.name}</span>
-                </div>
-              )}
             />
           </div>
         </div>
@@ -111,7 +77,7 @@ export default function TranslateSalary() {
               <label className="label">Currency</label>
               <SearchableSelect
                 options={currencyOptions}
-                value={{ code: salaryCurrency || source.currency }}
+                value={{ code: salaryCurrency || source?.currency }}
                 onChange={(o) => dispatch(setCurrencyUserSelected(o.code))}
                 getOptionValue={(o) => o.code}
                 getOptionLabel={(o) => currencyLabel(o.code)}
@@ -144,12 +110,12 @@ export default function TranslateSalary() {
           title="Lifestyle"
           currency={salaryCurrency || source?.currency}
           fields={[
-            { key: 'houseRent', label: 'House Rent', placeholder: 'e.g., 1,500', value: houseRent },
-            { key: 'food', label: 'Food', placeholder: 'e.g., 400', value: food },
-            { key: 'entertainment', label: 'Entertainment', placeholder: 'e.g., 150', value: entertainment },
-            { key: 'travel', label: 'Travel', placeholder: 'e.g., 120', value: travel },
-            { key: 'shopping', label: 'Shopping', placeholder: 'e.g., 200', value: shopping },
-            { key: 'other', label: 'Other', placeholder: 'e.g., 75', value: other },
+            { key: 'lifestyle.houseRent', label: 'House Rent', placeholder: 'e.g., 1,500', value: lifestyle.houseRent },
+            { key: 'lifestyle.food', label: 'Food', placeholder: 'e.g., 400', value: lifestyle.food },
+            { key: 'lifestyle.entertainment', label: 'Entertainment', placeholder: 'e.g., 150', value: lifestyle.entertainment },
+            { key: 'lifestyle.travel', label: 'Travel', placeholder: 'e.g., 120', value: lifestyle.travel },
+            { key: 'lifestyle.shopping', label: 'Shopping', placeholder: 'e.g., 200', value: lifestyle.shopping },
+            { key: 'lifestyle.other', label: 'Other', placeholder: 'e.g., 75', value: lifestyle.other },
           ]}
           makeMonetaryChangeHandler={makeMonetaryChangeHandler}
           open={lifestyleOpen}
@@ -160,9 +126,9 @@ export default function TranslateSalary() {
           title="Surprises"
           currency={salaryCurrency || source?.currency}
           fields={[
-            { key: 'medicalExpenses', label: 'Medical Expenses', placeholder: 'e.g., 100', value: medicalExpenses },
-            { key: 'medicalInsurance', label: 'Medical Insurance', placeholder: 'e.g., 80', value: medicalInsurance },
-            { key: 'surprisesOther', label: 'Other (Surprises)', placeholder: 'e.g., 50', value: surprisesOther },
+            { key: 'surprises.medicalExpenses', label: 'Medical Expenses', placeholder: 'e.g., 100', value: surprises.medicalExpenses },
+            { key: 'surprises.medicalInsurance', label: 'Medical Insurance', placeholder: 'e.g., 80', value: surprises.medicalInsurance },
+            { key: 'surprises.surprisesOther', label: 'Other (Surprises)', placeholder: 'e.g., 50', value: surprises.surprisesOther },
           ]}
           makeMonetaryChangeHandler={makeMonetaryChangeHandler}
           open={surprisesOpen}
@@ -179,7 +145,7 @@ export default function TranslateSalary() {
             onClick={() => {
               dispatch(setField({ field: 'salary', value: '' }))
               dispatch(resetCurrencySelection(source?.currency))
-              dispatch(resetLifestyle())
+              dispatch(resetExpenses())
             }}
           >
             Reset

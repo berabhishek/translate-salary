@@ -6,16 +6,19 @@ const initialState = {
   salary: '',
   salaryCurrency: 'USD',
   salaryCurrencyUserSelected: false,
-  houseRent: '',
-  food: '',
-  entertainment: '',
-  travel: '',
-  shopping: '',
-  other: '',
-  // Surprises section
-  medicalExpenses: '',
-  medicalInsurance: '',
-  surprisesOther: '',
+  lifestyle: {
+    houseRent: '',
+    food: '',
+    entertainment: '',
+    travel: '',
+    shopping: '',
+    other: '',
+  },
+  surprises: {
+    medicalExpenses: '',
+    medicalInsurance: '',
+    surprisesOther: '',
+  },
 }
 
 const formSlice = createSlice({
@@ -24,7 +27,12 @@ const formSlice = createSlice({
   reducers: {
     setField: (state, action) => {
       const { field, value } = action.payload
-      state[field] = value
+      const [section, key] = field.split('.')
+      if (key) {
+        state[section][key] = value
+      } else {
+        state[field] = value
+      }
     },
     setCurrencyUserSelected: (state, action) => {
       state.salaryCurrency = action.payload
@@ -40,20 +48,23 @@ const formSlice = createSlice({
       state.salaryCurrency = action.payload
       state.salaryCurrencyUserSelected = false
     },
-    resetLifestyle: (state) => {
-      state.houseRent = ''
-      state.food = ''
-      state.entertainment = ''
-      state.travel = ''
-      state.shopping = ''
-      state.other = ''
-      // Also clear surprises
-      state.medicalExpenses = ''
-      state.medicalInsurance = ''
-      state.surprisesOther = ''
-    }
+    resetExpenses: (state) => {
+      state.lifestyle = {
+        houseRent: '',
+        food: '',
+        entertainment: '',
+        travel: '',
+        shopping: '',
+        other: '',
+      }
+      state.surprises = {
+        medicalExpenses: '',
+        medicalInsurance: '',
+        surprisesOther: '',
+      }
+    },
   }
 })
 
-export const { setField, resetLifestyle, setCurrencyUserSelected, setCurrencyFromSource, resetCurrencySelection } = formSlice.actions
+export const { setField, resetExpenses, setCurrencyUserSelected, setCurrencyFromSource, resetCurrencySelection } = formSlice.actions
 export default formSlice.reducer

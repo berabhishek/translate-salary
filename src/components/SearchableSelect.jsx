@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useOnClickOutside } from '../hooks/useOnClickOutside';
+
 export default function SearchableSelect({
   options,
   value,
@@ -27,15 +29,7 @@ export default function SearchableSelect({
     return options.filter((o) => getOptionLabel(o).toLowerCase().includes(q))
   }, [query, options, getOptionLabel])
 
-  useEffect(() => {
-    const onDocClick = (e) => {
-      if (!buttonRef.current) return
-      if (buttonRef.current.contains(e.target) || listRef.current?.contains(e.target)) return
-      setOpen(false)
-    }
-    document.addEventListener('mousedown', onDocClick)
-    return () => document.removeEventListener('mousedown', onDocClick)
-  }, [])
+  useOnClickOutside([buttonRef, listRef], () => setOpen(false));
 
   function handleSelect(o) {
     onChange?.(o)
