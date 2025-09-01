@@ -32,6 +32,7 @@ body {
 .card { background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid var(--stroke); border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px #00000055, inset 0 1px 0 #ffffff10; }
 .form { display: grid; gap: 18px; }
 .form-row { display: grid; gap: 10px; }
+.form-row-split { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 .label { font-weight: 600; font-size: 14px; }
 .hint { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
 

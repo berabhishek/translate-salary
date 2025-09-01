@@ -67,37 +67,46 @@ export default function TranslateSalary() {
   return (
     <main className="card">
       <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <div className="form-row">
-          <label className="label">Source Country</label>
-          <SearchableSelect
-            options={countries}
-            value={source}
-            onChange={handleSourceChange}
-            getOptionValue={(o) => o.code}
-            getOptionLabel={(o) => `${o.name}`}
-            placeholder="Select source country"
-            renderOption={(o) => (
-              <div className="opt-row">
-                <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
-                <span>{o.name}</span>
-              </div>
-            )}
-          />
+        <div class="form-row-split">
+          <div className="form-row">
+            <label className="label">Source Country</label>
+            <SearchableSelect
+              options={countries}
+              value={source}
+              onChange={handleSourceChange}
+              getOptionValue={(o) => o.code}
+              getOptionLabel={(o) => `${o.name}`}
+              placeholder="Select source country"
+              renderOption={(o) => (
+                <div className="opt-row">
+                  <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
+                  <span>{o.name}</span>
+                </div>
+              )}
+            />
+          </div>
+
+          <div className="form-row">
+            <label className="label">Target Country</label>
+            <SearchableSelect
+              options={countries}
+              value={target}
+              onChange={(o) => dispatch(setField({ field: 'targetCode', value: o.code }))}
+              getOptionValue={(o) => o.code}
+              getOptionLabel={(o) => `${o.name}`}
+              placeholder="Select target country"
+              renderOption={(o) => (
+                <div className="opt-row">
+                  <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
+                  <span>{o.name}</span>
+                </div>
+              )}
+            />
+          </div>
         </div>
 
         <div className="form-row">
-          <label className="label">Annual Salary</label>
           <div className="salary-group">
-            <input
-              ref={salaryInputRef}
-              type="text"
-              inputMode="decimal"
-              placeholder="e.g., 80,000"
-              className="input flex-1"
-              value={salary}
-              onChange={makeMonetaryChangeHandler('salary', salaryInputRef)}
-            />
-
             <div className="salary-subcol currency-select">
               <label className="label">Currency</label>
               <SearchableSelect
@@ -115,26 +124,20 @@ export default function TranslateSalary() {
                 )}
               />
             </div>
+            <div className="salary-subcol flex-1">
+              <label className="label">Annual Salary</label>
+              <input
+                ref={salaryInputRef}
+                type="text"
+                inputMode="decimal"
+                placeholder="e.g., 80,000"
+                className="input"
+                value={salary}
+                onChange={makeMonetaryChangeHandler('salary', salaryInputRef)}
+              />
+            </div>
           </div>
           <p className="hint">Enter the pre tax annual salary in the source country.</p>
-        </div>
-
-        <div className="form-row">
-          <label className="label">Target Country</label>
-          <SearchableSelect
-            options={countries}
-            value={target}
-            onChange={(o) => dispatch(setField({ field: 'targetCode', value: o.code }))}
-            getOptionValue={(o) => o.code}
-            getOptionLabel={(o) => `${o.name}`}
-            placeholder="Select target country"
-            renderOption={(o) => (
-              <div className="opt-row">
-                <span className="flag">{flagEmojiFromCountryCode(o.code)}</span>
-                <span>{o.name}</span>
-              </div>
-            )}
-          />
         </div>
 
         <ExpensesSection
