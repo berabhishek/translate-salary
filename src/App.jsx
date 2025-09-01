@@ -15,7 +15,6 @@ export default function App() {
       <TranslateSalary />
 
       <footer className="footer">
-        <span className="muted">Tip: Start typing to search the dropdowns</span>
       </footer>
     </div>
   )
