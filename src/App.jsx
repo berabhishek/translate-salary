@@ -1,5 +1,6 @@
 import React from 'react'
 import TranslateSalary from './pages/TranslateSalary.jsx'
+import IdealTargetCard from './components/IdealTargetCard.jsx'
 
 export default function App() {
   return (
@@ -12,7 +13,10 @@ export default function App() {
         </div>
       </header>
 
-      <TranslateSalary />
+      <div className="content-grid">
+        <TranslateSalary />
+        <IdealTargetCard />
+      </div>
 
       <footer className="footer">
       </footer>
