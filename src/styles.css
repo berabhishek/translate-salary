@@ -55,6 +55,13 @@ body {
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 .chip { background: var(--chip); border: 1px solid var(--stroke); padding: 2px 8px; border-radius: 999px; margin-right: 8px; }
 
+/* Collapsible section */
+.collapse-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #0b1220; border: 1px solid var(--stroke); color: var(--text); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: box-shadow .2s, border-color .2s; text-align: left; }
+.collapse-toggle:focus { border-color: #4c1d95; box-shadow: 0 0 0 6px var(--ring); outline: none; }
+.chevron { transition: transform .2s; opacity: .8; }
+.chevron.open { transform: rotate(180deg); }
+.lifestyle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 10px; }
+
 /* SearchableSelect */
 .ss-root { position: relative; }
 .ss-button { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #0b1220; border: 1px solid var(--stroke); color: var(--text); border-radius: 10px; padding: 12px 14px; cursor: pointer; transition: box-shadow .2s, border-color .2s; text-align: left; }
@@ -76,4 +83,5 @@ body {
 @media (max-width: 560px) {
   .salary-group { flex-direction: column; align-items: stretch; }
   .currency-select { min-width: 0; width: 100%; }
+  .lifestyle-grid { grid-template-columns: 1fr; }
 }
