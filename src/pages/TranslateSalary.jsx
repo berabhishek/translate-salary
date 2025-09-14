@@ -51,7 +51,7 @@ export default function TranslateSalary() {
   return (
     <main className="card">
       <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <div class="form-row-split">
+        <div className="form-row-split">
           <div className="form-row">
             <label className="label">Source Country</label>
             <CountrySelect

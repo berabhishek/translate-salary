@@ -1,13 +1,13 @@
-// Minimal Vercel Blob client helper for browser usage with Vite
-// Expects `VITE_BLOB_READ_WRITE_TOKEN` in your env (do not expose in prod)
+// Minimal Vercel Blob client helper for browser usage
+// In Next.js, expose a read-write token only for local/dev via NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN
 
 import { upload } from '@vercel/blob/client';
 
 function getToken() {
-  const token = import.meta.env.VITE_BLOB_READ_WRITE_TOKEN;
+  const token = process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN;
   if (!token) {
     throw new Error(
-      'Missing VITE_BLOB_READ_WRITE_TOKEN. Set it in .env.local.'
+      'Missing NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN. Set it in .env.local for local dev only.'
     );
   }
   return token;
@@ -32,4 +32,3 @@ export async function uploadFile(file, options = {}) {
   });
   return res; // { url, pathname, contentType, uploadedAt, size }
 }
-

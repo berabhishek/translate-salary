@@ -10,17 +10,8 @@ A lightweight, Vite + React app to help compare salaries across countries and cu
 - Modern stack: React 18 + Vite for fast dev and prod builds.
 
 ## Getting Started
-- Prerequisites: Node.js 18+ and npm.
-- Install: `npm install`
-- Dev server: `npm run dev` (opens on `http://localhost:5173`)
-- Production build: `npm run build` (outputs to `dist/`)
-- Preview build: `npm run preview`
 
-## Project Structure
-- `src/App.jsx`: Main UI and salary formatting logic.
-- `src/components/SearchableSelect.jsx`: Reusable searchable dropdown.
-- `src/countries.js`: Country list with ISO codes and currencies, plus flag helper.
-- `src/styles.css`: App styling.
+
 - `vite.config.js`: Vite configuration.
 - `index.html`: App entry.
 
