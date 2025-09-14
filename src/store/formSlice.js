@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  sourceCode: 'US',
-  targetCode: 'IN',
+  sourceCode: 'IN',
+  targetCode: 'US',
   salary: '',
-  salaryCurrency: 'USD',
+  salaryCurrency: 'INR',
   salaryCurrencyUserSelected: false,
   lifestyle: {
     houseRent: '',

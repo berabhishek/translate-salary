@@ -39,11 +39,13 @@
 - **Commits:** Use Conventional Commits (`feat:`, `fix:`, `refactor:`, etc.)
 - **PRs:** Clear description, linked issues, before/after UI screenshots, and testing notes. Keep PRs focused/small.
 
+
 ## Agent-Specific Notes
 - **Do not run the dev server (it may already be running).**
 - **Do not commit changes unless explicitly asked.**
 - **Reference key files when describing patterns.**
 - **Document only discoverable, enforced patterns.**
+- **Always clean up after yourself: If you create any temporary or helper files for intermediate steps (e.g., SQL scripts, data dumps), delete them when they are no longer needed for the end product. Only leave files that are part of the final deliverable.**
 
 ## Examples
 - **Formatting:** See `numberFormat.js` and `useMonetaryInput.js` for salary input logic.
