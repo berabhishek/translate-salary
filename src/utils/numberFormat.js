@@ -47,3 +47,10 @@ export function reformatWithCommasPreserveCaret(raw, selectionStart) {
   return { formatted, caret: newCaret }
 }
 
+/**
+ * Parses a formatted currency string (e.g., "1,234.56") into a float.
+ * Returns 0 for empty or invalid strings.
+ */
+export function parseCurrency(str) {
+  return parseFloat(String(str || '0').replace(/,/g, ''));
+}
