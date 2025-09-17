@@ -2,6 +2,17 @@
 
 A web application to help you understand and compare salaries across different countries by calculating estimated taxes based on progressive tax brackets.
 
+## Project Purpose
+
+This tool helps users determine what salary they should target in another country to maintain the same level of savings after taxes and expenses. Whether you're considering an international job offer, planning a relocation, or exploring opportunities abroad, this application takes into account:
+
+- **Tax differences** between countries using progressive tax brackets
+- **Lifestyle expenses** (housing, food, entertainment, travel, shopping, etc.)
+- **Unexpected costs** (medical expenses, insurance, and other surprises)
+- **Currency conversions** to provide accurate comparisons
+
+The core use case is answering the question: "If I want to save the same amount of money in [target country] as I do in [current country], what salary do I need to negotiate?"
+
 ## Features
 
 -   **Salary Comparison:** Compare salaries between a source and target country.
