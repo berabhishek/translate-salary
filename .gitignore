@@ -1,5 +1,5 @@
 # SQLite database
-data.sqlite
+# data.sqlite
 # Node/Vite
 node_modules/
 dist/
